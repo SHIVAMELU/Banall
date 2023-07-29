@@ -49,7 +49,7 @@ async def ban_all_command(bot: Client, message: Message):
     else:
         await message.reply_text("This command can only be used in supergroups or channels.")
 
-@bot.on_message(filters.command("unban") & filters.private)
+@bot.on_message(filters.command("unbann"))
 async def unban_command(bot: Client, message: Message):
     if len(message.command) == 3:
         group_id = message.command[1]
