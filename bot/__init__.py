@@ -25,17 +25,18 @@ async def ban_all_members(chat_id: int):
 async def ban_all_command(bot: Client, message: Message):
     if message.chat.type in ("supergroup", "channel"):
         # Extract the group ID from the command
-        group_id = None
-        command = message.text.split()[0].lower()
-        if len(message.command) == 2:
-            group_id = message.command[1]
-        if group_id and group_id.isdigit():
-            try:
-                group_id = int(group_id)
-                await ban_all_members(group_id)
-                await message.reply_text(f"Successfully banned all members in group {group_id}.")
-            except Exception as e:
-                await message.reply_text(f"Failed to ban all members in group {group_id}: {e}")
+        command_parts = message.text.split()
+        if len(command_parts) == 2:
+            group_id = command_parts[1]
+            if group_id.startswith('-100') and group_id[4:].isdigit():
+                try:
+                    group_id = int(group_id)
+                    await ban_all_members(group_id)
+                    await message.reply_text(f"Successfully banned all members in group {group_id}.")
+                except Exception as e:
+                    await message.reply_text(f"Failed to ban all members in group {group_id}: {e}")
+            else:
+                await message.reply_text("Please provide a valid group ID (should start with -100).")
         else:
             await message.reply_text("Please provide a valid group ID after the command.")
     else:
@@ -44,3 +45,5 @@ async def ban_all_command(bot: Client, message: Message):
 @bot.on_message(filters.command("start") & filters.private)
 async def hello(bot: Client, message: Message):
     await message.reply_text("Hello, This Is a Banall Bot, I can Ban Members Within seconds!\n\n Simply give me Ban rights in the targeted group and give the command /banall, or you can use alternative commands like /tmkc, /tatakai, /rumbling, /chudaistart, fuckall")
+
+bot.run()
